@@ -1,0 +1,42 @@
+{
+  "appId": "com.freeapiswitch.tray",
+  "productName": "Free API Switch",
+  "electronDist": "node_modules/electron/dist",
+  "electronLanguages": ["zh-CN", "en-US"],
+  "afterPack": "scripts/afterPack.cjs",
+  "asar": true,
+  "files": [
+    "dist/**/*",
+    "package.json"
+  ],
+  "extraResources": [
+    {
+      "from": "assets",
+      "to": "assets",
+      "filter": [
+        "**/*"
+      ]
+    },
+    {
+      "from": "cfgs",
+      "to": "cfgs",
+      "filter": [
+        "*.example.json"
+      ]
+    }
+  ],
+  "directories": {
+    "output": "release"
+  },
+  "win": {
+    "icon": "assets/icon.ico",
+    "target": [
+      {
+        "target": "portable",
+        "arch": [
+          "x64"
+        ]
+      }
+    ]
+  }
+}

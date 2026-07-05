@@ -1,0 +1,9 @@
+{
+  "host": "127.0.0.1",
+  "port": 8787,
+  "log_level": "debug",
+  "request_timeout_ms": 60000,
+  "local_key": "123456",
+  "default_openai_model": "deepseek-deepseek-v4-flash",
+  "default_anthropic_model": "yiyuan-claude-sonnet-4-6"
+}

@@ -1,0 +1,9 @@
+{
+  "host": "127.0.0.1",
+  "port": 8787,
+  "log_level": "info",
+  "request_timeout_ms": 600000,
+  "local_key": "local-your-token",
+  "default_openai_model": "deepseek-chat",
+  "default_anthropic_model": "claude-sonnet-4"
+}
