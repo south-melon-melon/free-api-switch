@@ -31,7 +31,25 @@ D:\FAS\
 
 > exe 与 `cfgs/` 必须同级放置。exe 通过自身路径定位 `cfgs/`，与当前工作目录、快捷方式、开机自启无关。
 
-### 1.2 启动
+### 1.2 首次运行前：填写 model_api.json
+
+出于安全考虑，`cfgs/model_api.json` **不随仓库或安装包直接提供真实 key**。首次运行前需要生成一份并填入你自己的上游 API Key。
+
+**方式 A（推荐，托盘 exe 用户）**：`release/cfgs/model_api.json` 是打包脚本从 `cfgs/model_api.example.json` 自动拷贝的**示例文件**（`api_key` 是 `sk-your-...` 占位符），直接用编辑器打开填入真实值即可，字段说明见 [附录 A](#附录-a配置字段)。
+
+**方式 B（从源码运行）**：仓库 `.gitignore` 忽略 `cfgs/model_api.json`；首次拉代码后需要手动复制一份：
+
+```powershell
+Copy-Item cfgs/model_api.example.json cfgs/model_api.json
+```
+
+（Linux/macOS：`cp cfgs/model_api.example.json cfgs/model_api.json`）然后编辑其中的 `api_key` / `base_url` / `model_id` 等字段。
+
+**方式 C（不动 JSON，从托盘 UI 生成）**：如果你已经能启动一次（例如 `model_api.json` 现在只是占位），从托盘右键 **"配置管理..."** 打开设置窗口，在里面添加/编辑 profile 并保存，程序会做完整校验并原子写盘，等价于手动编辑 JSON。
+
+> 校验规则：`api_key` 必填非空、`base_url` 不能含 `/v1`、`default_openai_model` 与 `default_anthropic_model` 必须命中对应类型的 `enabled` profile。校验失败启动会被拒绝或保存会被拒绝并显示错误。
+
+### 1.3 启动
 
 双击 exe：
 
@@ -41,7 +59,7 @@ D:\FAS\
 
 配置错误、端口占用等启动失败会以 Windows 通知反馈。托盘为单实例，重复启动直接退出。
 
-### 1.3 在编程工具中配置（TRAE 等）
+### 1.4 在编程工具中配置（TRAE 等）
 
 ```
 Base URL: http://127.0.0.1:8787/v1
@@ -62,7 +80,7 @@ Model:    anything  （客户端填任意值，会被 profile.model_id 覆盖）
 - **配置管理...**：打开可视化设置窗口，编辑 `app.json` 与 `model_api.json` 的全部字段，支持 profile 新增/复制/删除、启用/禁用、`thinking_level` 抽象等级下拉、`defaults` JSON 编辑。**保存前会做完整校验；保存成功后自动关闭并重启内部服务，让新配置立即生效**（含 `host` / `port` 变更）。
 - **退出**：优雅关闭服务并释放端口。
 
-### 1.5 抽象推理强度（thinking_level）
+### 1.6 抽象推理强度（thinking_level）
 
 profile 上的 `thinking_level` 是本项目的抽象等级，代理转发时按 profile 类型自动翻译为上游真实字段，你**不用**去查各家 API 的 reasoning 字段：
 
@@ -102,7 +120,16 @@ npm run dev       # watch 模式
 
 ### 2.3 准备配置
 
-复制 `cfgs/*.example.json` 并改成你的真实配置。字段说明见 [附录 A](#附录-a配置字段)。
+`cfgs/model_api.json` 在 `.gitignore` 中被忽略，克隆仓库后需要手动生成一份：
+
+```powershell
+Copy-Item cfgs/app.example.json cfgs/app.json            # 若不存在
+Copy-Item cfgs/model_api.example.json cfgs/model_api.json
+```
+
+（Linux/macOS 把 `Copy-Item` 换成 `cp`。）然后用编辑器把 `api_key` / `base_url` / `model_id` 等改成你自己的真实值。字段说明见 [附录 A](#附录-a配置字段)。
+
+也可以先复制占位版启动一次（托盘或 CLI），再从托盘 **"配置管理..."** UI 里编辑保存，效果等价。
 
 ### 2.4 三种运行方式
 
